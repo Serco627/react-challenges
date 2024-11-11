@@ -2,6 +2,10 @@ import { useState } from "react";
 import "./App.css";
 
 export default function App() {
+  return <TipCalculator />;
+}
+
+function TipCalculator() {
   const [billInput, setBillInput] = useState("");
   const [myPercentage, setMyPercentage] = useState(0);
   const [friendPercentage, setFriendPercentage] = useState(0);
@@ -33,8 +37,15 @@ export default function App() {
         percentage={friendPercentage}
         onHandlePercentage={(e) => handlePercentage(e, setFriendPercentage)}
       />
-      <TipOutput billInput={billInput} averagePercentage={averagePercentage} />
-      <ResetButton onHandleReset={handleReset} />
+      {billInput === "" ? null : (
+        <>
+          <TipOutput
+            billInput={billInput}
+            averagePercentage={averagePercentage}
+          />
+          <ResetButton onHandleReset={handleReset} />
+        </>
+      )}
     </div>
   );
 }
@@ -53,20 +64,6 @@ function Bill({ billInput, setBillInput }) {
   );
 }
 
-function TipOutput({ billInput, averagePercentage }) {
-  const tip = billInput * averagePercentage;
-  const total = parseFloat(billInput) + tip;
-  return (
-    <div>
-      {billInput === "" ? null : (
-        <p style={{ fontWeight: "bold" }}>
-          You pay ${total} (${billInput} + ${tip} tip)
-        </p>
-      )}
-    </div>
-  );
-}
-
 function Percentage({ label, percentage, onHandlePercentage }) {
   return (
     <div>
@@ -81,6 +78,19 @@ function Percentage({ label, percentage, onHandlePercentage }) {
   );
 }
 
+function TipOutput({ billInput, averagePercentage }) {
+  const tip = billInput * averagePercentage;
+  const total = parseFloat(billInput) + tip;
+  return (
+    <div>
+      <div>
+        <h3>
+          You pay ${total} (${billInput} + ${tip} tip)
+        </h3>
+      </div>
+    </div>
+  );
+}
 function ResetButton({ onHandleReset }) {
   return <button onClick={onHandleReset}>Reset</button>;
 }
